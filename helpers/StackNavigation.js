@@ -6,6 +6,8 @@ import useAuth from "../hooks/useAuth";
 import MovieScreen from "../src/screens/movies/movieScreen";
 import SingleMovieScreen from "../src/screens/movies/SingleMovieScreen";
 import WatchListScreen from "../src/screens/WatchListScreen";
+import WatchListItems from "../src/screens/WatchListItems";
+import AddtoList from "../src/screens/AddtoList";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +25,8 @@ const StackNavigation = () => {
           <Stack.Screen name={"Movies"} component={MovieScreen} />
           <Stack.Screen name={"SingleMovie"} component={SingleMovieScreen} />
           <Stack.Screen name={"WatchList"} component={WatchListScreen} />
+          <Stack.Screen name={"WatchListItems"} component={WatchListItems} />
+          <Stack.Screen name={"AddToList"} component={AddtoList} />
         </>
       ) : (
         <Stack.Screen name={"Login"} component={LoginScreen} />

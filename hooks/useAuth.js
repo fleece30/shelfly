@@ -8,6 +8,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { CLIENT_ID } from "@env";
+import { devMustWatch } from "../helpers/constants";
 
 const AuthContext = createContext({});
 
@@ -20,31 +21,41 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        addUserToDB(user).catch((error) => console.log(error));
+        let newUser = {
+          uid: user.uid,
+          name: user.displayName,
+          watchLists: [
+            {
+              title: "Dev's must watch",
+              items: devMustWatch,
+              desc: "A curated list of movies and TV everyone should watch once in their life!",
+            },
+          ],
+          readLists: [],
+          profilePic: `https://avatars.dicebear.com/api/croodles-neutral/12345.svg`,
+        };
+        addUserToDB(newUser).catch((error) => console.log(error));
       } else {
         setUser(null);
       }
     });
   }, []);
 
-  const getUserData = async (user) => {
+  const getUserData = async () => {
     const userRef = doc(db, "users", user.uid);
     const data = await getDoc(userRef);
     setUser(data.data());
   };
 
-  const addUserToDB = async (user) => {
-    const userRef = doc(db, "users", user.uid);
+  const addUserToDB = async (newUser) => {
+    const userRef = doc(db, "users", newUser.uid);
     const userSnap = await getDoc(userRef);
     if (!userSnap.exists()) {
-      await setDoc(userRef, {
-        name: user.displayName,
-        watchLists: [],
-        readLists: [],
-        profilePic: `https://avatars.dicebear.com/api/croodles-neutral/12345.svg`,
-      });
+      await setDoc(userRef, newUser).then(() => setUser(newUser));
+    } else {
+      setUser(newUser);
     }
-    await getUserData(user);
+    await getUserData();
   };
 
   const signInWithGoogle = async () => {

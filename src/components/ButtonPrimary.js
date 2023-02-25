@@ -2,11 +2,12 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 import CustomText from "./CustomText";
 
-const ButtonPrimary = ({ onPress, title }) => {
+const ButtonPrimary = ({ onPress, title, classes }) => {
   return (
     <TouchableOpacity
       className={
-        "w-full h-14 bg-white rounded-md justify-center items-center mt-5"
+        "w-full h-14 bg-white rounded-md justify-center items-center mt-5 " +
+        classes
       }
       onPress={onPress}
     >

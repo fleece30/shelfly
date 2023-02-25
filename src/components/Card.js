@@ -7,7 +7,7 @@ const Card = ({ image, id, type }) => {
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate("SingleMovie", { id, type })}
-      className={"w-40 h-56 mr-3"}
+      className={"w-40 h-56 mx-2 my-2"}
     >
       <Image className={"w-full h-full rounded-lg"} source={{ uri: image }} />
     </TouchableOpacity>

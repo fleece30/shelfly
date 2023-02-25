@@ -65,4 +65,32 @@ const movieGenres = [
   },
 ];
 
-export { movieGenres };
+const devMustWatch = [
+  {
+    id: 9502,
+    image: "https://image.tmdb.org/t/p/w500/xCn3VOST64XpOA8x0gaQkQiZtZY.jpg",
+    type: 0,
+  },
+  {
+    id: 49444,
+    image: "https://image.tmdb.org/t/p/w500/mtqqD00vB4PGRt20gWtGqFhrkd0.jpg",
+    type: 0,
+  },
+  {
+    id: 140300,
+    image: "https://image.tmdb.org/t/p/w500/oajNi4Su39WAByHI6EONu8G8HYn.jpg",
+    type: 0,
+  },
+  {
+    id: 246,
+    image: "https://image.tmdb.org/t/p/w500/cHFZA8Tlv03nKTGXhLOYOLtqoSm.jpg",
+    type: 1,
+  },
+  {
+    id: 372058,
+    image: "https://image.tmdb.org/t/p/w500/q719jXXEzOoYaps6babgKnONONX.jpg",
+    type: 0,
+  },
+];
+
+export { movieGenres, devMustWatch };

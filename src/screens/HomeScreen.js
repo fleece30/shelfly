@@ -7,7 +7,7 @@ import CustomText from "../components/CustomText";
 import { SvgUri } from "react-native-svg";
 
 const HomeScreen = () => {
-  const { user } = useAuth();
+  const { user, logOut } = useAuth();
 
   useEffect(() => {}, []);
 
@@ -33,9 +33,15 @@ const HomeScreen = () => {
               <SvgUri uri={user.profilePic} />
             </View>
           </View>
-          <View className={"mt-10"}>
+          <View className={"mt-10 space-y-6"}>
             <TouchableOpacity onPress={() => navigation.navigate("WatchList")}>
               <CustomText font={"poppins-reg"}>My watchlists</CustomText>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => logOut()}>
+              <CustomText font={"poppins-reg"}>Sign out</CustomText>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Movies")}>
+              <CustomText font={"poppins-reg"}>Movies</CustomText>
             </TouchableOpacity>
           </View>
         </View>

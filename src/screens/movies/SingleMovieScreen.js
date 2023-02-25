@@ -4,10 +4,12 @@ import { fetchMovieById, fetchTVById } from "../../../helpers/api";
 import CustomText from "../../components/CustomText";
 import GradientBackground from "../../components/GradientBackground";
 import ButtonPrimary from "../../components/ButtonPrimary";
+import { useNavigation } from "@react-navigation/native";
 
 const SingleMovieScreen = ({ route }) => {
   const { id, type } = route.params;
   const [details, setDetails] = useState({});
+  const navigation = useNavigation();
 
   useEffect(() => {
     getDetails().catch((error) => console.log(error));
@@ -46,10 +48,10 @@ const SingleMovieScreen = ({ route }) => {
                 {details.title}
               </CustomText>
               <View className={"w-full mt-3 flex flex-row justify-around"}>
-                <CustomText font={"poppins-reg"}>
+                <CustomText font={"poppins-sbold"}>
                   {Math.round(details.vote_average * 10) / 10}/10
                 </CustomText>
-                <CustomText font={"poppins-reg"}>
+                <CustomText font={"poppins-sbold"}>
                   {type === 0 ? details.release_date : details.first_air_date}
                 </CustomText>
               </View>
@@ -70,8 +72,10 @@ const SingleMovieScreen = ({ route }) => {
             </View>
 
             <ButtonPrimary
-              onPress={() => console.log("Pressed")}
               title={"Add to watchlist"}
+              onPress={() =>
+                navigation.navigate("AddToList", { details, type })
+              }
             />
           </View>
         </ScrollView>

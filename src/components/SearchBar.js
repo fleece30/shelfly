@@ -11,8 +11,13 @@ const SearchBar = ({ placeholder, setSearch }) => {
           placeholder={placeholder}
           placeholderTextColor={"white"}
           className="flex-1"
-          style={{ fontFamily: "montserrat-reg", fontSize: 16, color: "white" }}
+          style={{
+            fontFamily: "montserrat-reg",
+            fontSize: 16,
+            color: "#FAF9F6",
+          }}
           onChangeText={(e) => setSearch(e)}
+          clearButtonMode={"unless-editing"}
         />
       </View>
     </View>

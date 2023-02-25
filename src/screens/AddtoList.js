@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { View, SafeAreaView, TouchableOpacity } from "react-native";
-import GradientBackground from "../components/GradientBackground";
 import CustomText from "../components/CustomText";
-import useAuth from "../../hooks/useAuth";
-import { useNavigation } from "@react-navigation/native";
 import CreateListModal from "../components/CreateListModal";
 import Overlay from "../components/Overlay";
+import GradientBackground from "../components/GradientBackground";
+import useAuth from "../../hooks/useAuth";
 import { renderVerticalList } from "../../helpers/helpers";
+import { db, doc, getDoc, setDoc } from "../../helpers/firebase";
+import { useNavigation } from "@react-navigation/native";
 
-const WatchListScreen = () => {
+const AddToList = ({ route }) => {
   const { user, getUserData } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { details, type } = route.params;
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -21,10 +23,19 @@ const WatchListScreen = () => {
     if (!isModalOpen) getUserData().catch((error) => console.log(error));
   }, [isModalOpen]);
 
-  const navigateToWatchList = (watchList) => {
-    navigation.navigate("WatchListItems", {
-      watchList,
+  const updateListInDB = async (watchList) => {
+    const userRef = doc(db, "users", user.uid);
+    const data = await getDoc(userRef);
+    const userData = data.data();
+    const watchListIndex = userData.watchLists.findIndex(
+      (obj) => obj.title === watchList.title
+    );
+    userData.watchLists[watchListIndex].items.push({
+      id: details.id,
+      image: `https://image.tmdb.org/t/p/w500${details.poster_path}`,
+      type,
     });
+    await setDoc(userRef, userData).then(() => navigation.goBack());
   };
 
   return (
@@ -32,7 +43,7 @@ const WatchListScreen = () => {
       <SafeAreaView>
         <View className={"px-4 py-3 flex"}>
           <CustomText classes={"text-4xl text-center"} font={"lusitana-bold"}>
-            My watchlists
+            Add to watchlist
           </CustomText>
           <TouchableOpacity
             className={
@@ -45,11 +56,13 @@ const WatchListScreen = () => {
             </CustomText>
           </TouchableOpacity>
           {renderVerticalList(user.watchLists, (watchList) =>
-            navigateToWatchList(watchList)
+            updateListInDB(watchList)
           )}
           <CreateListModal
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
+            itemToAdd={details}
+            type={type}
           />
         </View>
       </SafeAreaView>
@@ -58,4 +71,4 @@ const WatchListScreen = () => {
   );
 };
 
-export default WatchListScreen;
+export default AddToList;

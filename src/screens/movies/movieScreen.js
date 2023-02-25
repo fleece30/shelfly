@@ -60,20 +60,21 @@ const MovieScreen = () => {
   return (
     <GradientBackground>
       <SafeAreaView>
+        <View className={"px-4 py-3 flex"}>
+          <CustomText classes={"text-4xl text-center"} font={"lusitana-bold"}>
+            Movies & TV
+          </CustomText>
+
+          {/*Searchbar*/}
+          <View className={"flex justify-center items-center"}>
+            <SearchBar
+              placeholder={"Search movies and tv"}
+              setSearch={(e) => handleSearchText(e)}
+            />
+          </View>
+        </View>
         <ScrollView>
-          <View className={"px-4 py-3 flex"}>
-            <CustomText classes={"text-4xl text-center"} font={"lusitana-bold"}>
-              Movies & TV
-            </CustomText>
-
-            {/*Searchbar*/}
-            <View className={"flex justify-center items-center"}>
-              <SearchBar
-                placeholder={"Search movies and tv"}
-                setSearch={(e) => handleSearchText(e)}
-              />
-            </View>
-
+          <View className={"px-4 pb-44 flex"}>
             {searchTerm === "" ? (
               <View>
                 {/*Genres*/}
