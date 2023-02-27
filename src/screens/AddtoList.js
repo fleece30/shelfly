@@ -32,8 +32,9 @@ const AddToList = ({ route }) => {
     );
     userData.watchLists[watchListIndex].items.push({
       id: details.id,
-      image: `https://image.tmdb.org/t/p/w500${details.poster_path}`,
+      poster_path: `https://image.tmdb.org/t/p/w500${details.poster_path}`,
       type,
+      title: type === 0 ? details.title : details.name,
     });
     await setDoc(userRef, userData).then(() => navigation.goBack());
   };

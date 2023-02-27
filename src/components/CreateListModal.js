@@ -11,7 +11,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import ButtonPrimary from "./ButtonPrimary";
 import { db, doc, updateDoc, arrayUnion } from "../../helpers/firebase";
 import useAuth from "../../hooks/useAuth";
-import { StackActions, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 const CreateListModal = ({ isModalOpen, setIsModalOpen, itemToAdd, type }) => {
   const [listName, setListName] = useState("My watchlist");
@@ -30,8 +30,9 @@ const CreateListModal = ({ isModalOpen, setIsModalOpen, itemToAdd, type }) => {
       items: [
         {
           id: itemToAdd.id,
-          image: `https://image.tmdb.org/t/p/w500${itemToAdd.poster_path}`,
+          poster_path: `https://image.tmdb.org/t/p/w500${itemToAdd.poster_path}`,
           type,
+          title: type === 0 ? itemToAdd.title : itemToAdd.name,
         },
       ],
       desc: "",
@@ -41,9 +42,7 @@ const CreateListModal = ({ isModalOpen, setIsModalOpen, itemToAdd, type }) => {
       watchLists: arrayUnion(newList),
     }).then(() => {
       setIsModalOpen(false);
-      navigation.dispatch(
-        StackActions.replace("WatchListItems", { watchList: newList })
-      );
+      navigation.goBack();
     });
   };
 

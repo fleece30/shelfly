@@ -68,28 +68,38 @@ const movieGenres = [
 const devMustWatch = [
   {
     id: 9502,
-    image: "https://image.tmdb.org/t/p/w500/xCn3VOST64XpOA8x0gaQkQiZtZY.jpg",
+    poster_path:
+      "https://image.tmdb.org/t/p/w500/xCn3VOST64XpOA8x0gaQkQiZtZY.jpg",
     type: 0,
+    title: "Kung Fu Panda",
   },
   {
     id: 49444,
-    image: "https://image.tmdb.org/t/p/w500/mtqqD00vB4PGRt20gWtGqFhrkd0.jpg",
+    poster_path:
+      "https://image.tmdb.org/t/p/w500/mtqqD00vB4PGRt20gWtGqFhrkd0.jpg",
     type: 0,
+    title: "Kung Fu Panda 2",
   },
   {
     id: 140300,
-    image: "https://image.tmdb.org/t/p/w500/oajNi4Su39WAByHI6EONu8G8HYn.jpg",
+    poster_path:
+      "https://image.tmdb.org/t/p/w500/oajNi4Su39WAByHI6EONu8G8HYn.jpg",
     type: 0,
+    title: "Kung Fu Panda 3",
   },
   {
     id: 246,
-    image: "https://image.tmdb.org/t/p/w500/cHFZA8Tlv03nKTGXhLOYOLtqoSm.jpg",
+    poster_path:
+      "https://image.tmdb.org/t/p/w500/cHFZA8Tlv03nKTGXhLOYOLtqoSm.jpg",
     type: 1,
+    title: "Avatar: The Last Airbender",
   },
   {
     id: 372058,
-    image: "https://image.tmdb.org/t/p/w500/q719jXXEzOoYaps6babgKnONONX.jpg",
+    poster_path:
+      "https://image.tmdb.org/t/p/w500/q719jXXEzOoYaps6babgKnONONX.jpg",
     type: 0,
+    title: "Your Name.",
   },
 ];
 

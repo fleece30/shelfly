@@ -1,10 +1,12 @@
 import React from "react";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, TouchableOpacity, View } from "react-native";
 import CustomText from "../src/components/CustomText";
 import _map from "lodash/map";
+import _uuid from "lodash/uniqueId";
 import Card from "../src/components/Card";
 import { movieGenres } from "./constants";
 import { ChevronRightIcon } from "react-native-heroicons/outline";
+import { useNavigation } from "@react-navigation/native";
 
 // type:
 //   0: movie
@@ -80,4 +82,47 @@ const renderVerticalList = (listToRender, onPress) => {
   );
 };
 
-export { renderList, renderGenres, renderVerticalList };
+const renderResultItem = (
+  itemToRender,
+  type,
+  navigatingFromWatchList = false
+) => {
+  const navigation = useNavigation();
+  return (
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate("SingleMovie", {
+          id: itemToRender.id,
+          type,
+          navigatingFromWatchList,
+        })
+      }
+      key={_uuid()}
+      className={
+        "w-screen h-fit flex flex-row py-1 border-b-[0.5px] border-slate-800"
+      }
+    >
+      <Image
+        source={{
+          uri: `https://image.tmdb.org/t/p/w500${itemToRender.poster_path}`,
+        }}
+        style={{
+          width: 200,
+          height: 150,
+          marginHorizontal: -30,
+          resizeMode: "contain",
+        }}
+      />
+      <View className={"flex space-y-2 justify-center flex-1 pr-2"}>
+        <CustomText font={"montserrat-sbold"} classes={"break-words"}>
+          {itemToRender.title || itemToRender.name}
+        </CustomText>
+        <CustomText font={"montserrat-reg"}>
+          {type === 1 ? "TV Show" : ""}
+        </CustomText>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+export { renderList, renderGenres, renderVerticalList, renderResultItem };

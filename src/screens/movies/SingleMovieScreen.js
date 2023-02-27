@@ -7,7 +7,7 @@ import ButtonPrimary from "../../components/ButtonPrimary";
 import { useNavigation } from "@react-navigation/native";
 
 const SingleMovieScreen = ({ route }) => {
-  const { id, type } = route.params;
+  const { id, type, navigatingFromWatchList } = route.params;
   const [details, setDetails] = useState({});
   const navigation = useNavigation();
 
@@ -71,12 +71,14 @@ const SingleMovieScreen = ({ route }) => {
               </CustomText>
             </View>
 
-            <ButtonPrimary
-              title={"Add to watchlist"}
-              onPress={() =>
-                navigation.navigate("AddToList", { details, type })
-              }
-            />
+            {!navigatingFromWatchList && (
+              <ButtonPrimary
+                title={"Add to watchlist"}
+                onPress={() =>
+                  navigation.navigate("AddToList", { details, type })
+                }
+              />
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>

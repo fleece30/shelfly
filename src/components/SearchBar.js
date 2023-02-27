@@ -17,7 +17,7 @@ const SearchBar = ({ placeholder, setSearch }) => {
             color: "#FAF9F6",
           }}
           onChangeText={(e) => setSearch(e)}
-          clearButtonMode={"unless-editing"}
+          clearButtonMode={"while-editing"}
         />
       </View>
     </View>

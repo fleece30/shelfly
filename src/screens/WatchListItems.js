@@ -2,9 +2,9 @@ import React from "react";
 import { ScrollView, SafeAreaView, View } from "react-native";
 import GradientBackground from "../components/GradientBackground";
 import _map from "lodash/map";
-import Card from "../components/Card";
 import CustomText from "../components/CustomText";
 import EmptyList from "../../assets/empty_list.svg";
+import { renderResultItem } from "../../helpers/helpers";
 
 const WatchListItems = ({ route }) => {
   const { watchList } = route.params;
@@ -27,14 +27,9 @@ const WatchListItems = ({ route }) => {
         {watchList.items.length > 0 ? (
           <ScrollView className={"h-full"}>
             <View className={"flex flex-row flex-wrap justify-center pb-10"}>
-              {_map(watchList.items, (watchListItem, key) => (
-                <Card
-                  key={key}
-                  image={watchListItem.image}
-                  type={watchListItem.type}
-                  id={watchListItem.id}
-                />
-              ))}
+              {_map(watchList.items, (watchListItem) =>
+                renderResultItem(watchListItem, watchListItem.type, true)
+              )}
             </View>
           </ScrollView>
         ) : (
