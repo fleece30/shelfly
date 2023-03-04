@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { View, SafeAreaView, Image, ScrollView } from "react-native";
+import { Image, SafeAreaView, ScrollView, View } from "react-native";
 import { fetchMovieById, fetchTVById } from "../../../helpers/api";
 import CustomText from "../../components/CustomText";
 import GradientBackground from "../../components/GradientBackground";
 import ButtonPrimary from "../../components/ButtonPrimary";
 import { useNavigation } from "@react-navigation/native";
+import { db, doc, getDoc, setDoc } from "../../../helpers/firebase";
+import useAuth from "../../../hooks/useAuth";
 
 const SingleMovieScreen = ({ route }) => {
-  const { id, type, navigatingFromWatchList } = route.params;
+  const { id, type, navigatingFromWatchList, haveWatched } = route.params;
+  const { user, getUserData } = useAuth();
   const [details, setDetails] = useState({});
+  const [watched, setWatched] = useState(haveWatched);
   const navigation = useNavigation();
-
-  useEffect(() => {
-    getDetails().catch((error) => console.log(error));
-  }, []);
 
   const getDetails = async () => {
     type === 0
@@ -23,6 +23,20 @@ const SingleMovieScreen = ({ route }) => {
       : await fetchTVById(id).then(({ data }) => {
           setDetails(data);
         });
+  };
+
+  useEffect(() => {
+    getDetails().catch((error) => console.log(error));
+  }, []);
+
+  const changeWatchedStatus = async () => {
+    const userRef = doc(db, "users", user.uid);
+    const userData = (await getDoc(userRef)).data();
+    userData.userMovies[id] = !userData.userMovies[id];
+    await setDoc(userRef, userData).then(() => {
+      setWatched(!watched);
+      getUserData().catch((err) => console.log(err));
+    });
   };
 
   return (
@@ -71,7 +85,12 @@ const SingleMovieScreen = ({ route }) => {
               </CustomText>
             </View>
 
-            {!navigatingFromWatchList && (
+            {navigatingFromWatchList ? (
+              <ButtonPrimary
+                title={watched ? "I haven't seen this yet" : "I've seen this"}
+                onPress={() => changeWatchedStatus()}
+              />
+            ) : (
               <ButtonPrimary
                 title={"Add to watchlist"}
                 onPress={() =>

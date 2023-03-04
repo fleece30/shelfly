@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { View, SafeAreaView, TouchableOpacity } from "react-native";
 import GradientBackground from "../components/GradientBackground";
 import CustomText from "../components/CustomText";
@@ -6,24 +6,20 @@ import useAuth from "../../hooks/useAuth";
 import { useNavigation } from "@react-navigation/native";
 import CreateListModal from "../components/CreateListModal";
 import Overlay from "../components/Overlay";
-import { renderVerticalList } from "../../helpers/helpers";
+import List from "../components/List";
 
 const WatchListScreen = () => {
-  const { user, getUserData } = useAuth();
+  const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    getUserData().catch((error) => console.log(error));
-  }, []);
+  // useEffect(() => {
+  //   if (!isModalOpen) getUserData().catch((error) => console.log(error));
+  // }, [isModalOpen]);
 
-  useEffect(() => {
-    if (!isModalOpen) getUserData().catch((error) => console.log(error));
-  }, [isModalOpen]);
-
-  const navigateToWatchList = (watchList) => {
+  const navigateToWatchList = (watchListIndex) => {
     navigation.navigate("WatchListItems", {
-      watchList,
+      watchListIndex,
     });
   };
 
@@ -44,9 +40,10 @@ const WatchListScreen = () => {
               Create new watchlist
             </CustomText>
           </TouchableOpacity>
-          {renderVerticalList(user.watchLists, (watchList) =>
-            navigateToWatchList(watchList)
-          )}
+          <List
+            listToRender={user.watchLists}
+            onPress={(watchListIndex) => navigateToWatchList(watchListIndex)}
+          />
           <CreateListModal
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}

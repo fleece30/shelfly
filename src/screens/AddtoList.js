@@ -5,37 +5,47 @@ import CreateListModal from "../components/CreateListModal";
 import Overlay from "../components/Overlay";
 import GradientBackground from "../components/GradientBackground";
 import useAuth from "../../hooks/useAuth";
-import { renderVerticalList } from "../../helpers/helpers";
 import { db, doc, getDoc, setDoc } from "../../helpers/firebase";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import List from "../components/List";
 
 const AddToList = ({ route }) => {
   const { user, getUserData } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { details, type } = route.params;
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    getUserData().catch((error) => console.log(error));
-  }, []);
+    if (isFocused) getUserData().catch((error) => console.log(error));
+  }, [isFocused]);
 
-  useEffect(() => {
-    if (!isModalOpen) getUserData().catch((error) => console.log(error));
-  }, [isModalOpen]);
+  // useEffect(() => {
+  //   if (!isModalOpen) getUserData().catch((error) => console.log(error));
+  // }, [isModalOpen]);
 
-  const updateListInDB = async (watchList) => {
+  const updateListInDB = async (watchListIndex) => {
     const userRef = doc(db, "users", user.uid);
+
     const data = await getDoc(userRef);
     const userData = data.data();
-    const watchListIndex = userData.watchLists.findIndex(
-      (obj) => obj.title === watchList.title
-    );
-    userData.watchLists[watchListIndex].items.push({
-      id: details.id,
+    const id = details.id;
+
+    const watchList = userData.watchLists[watchListIndex];
+    const uploadedRef = doc(db, "uploadedWatchLists", watchList.id);
+    const uploadedSnapshot = await getDoc(uploadedRef);
+
+    watchList.items.push({
+      id,
       poster_path: `https://image.tmdb.org/t/p/w500${details.poster_path}`,
       type,
       title: type === 0 ? details.title : details.name,
     });
+    if (uploadedSnapshot.exists()) {
+      await setDoc(uploadedRef, watchList);
+    }
+
+    userData.userMovies[id] = false;
     await setDoc(userRef, userData).then(() => navigation.goBack());
   };
 
@@ -56,9 +66,10 @@ const AddToList = ({ route }) => {
               Create new watchlist
             </CustomText>
           </TouchableOpacity>
-          {renderVerticalList(user.watchLists, (watchList) =>
-            updateListInDB(watchList)
-          )}
+          <List
+            listToRender={user.watchLists}
+            onPress={(watchListIndex) => updateListInDB(watchListIndex)}
+          />
           <CreateListModal
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}

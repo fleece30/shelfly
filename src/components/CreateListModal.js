@@ -9,27 +9,45 @@ import {
 import CustomText from "./CustomText";
 import { LinearGradient } from "expo-linear-gradient";
 import ButtonPrimary from "./ButtonPrimary";
-import { db, doc, updateDoc, arrayUnion } from "../../helpers/firebase";
+import { v4 as uuidv4 } from "uuid";
+import {
+  db,
+  doc,
+  updateDoc,
+  arrayUnion,
+  setDoc,
+  getDoc,
+} from "../../helpers/firebase";
 import useAuth from "../../hooks/useAuth";
 import { useNavigation } from "@react-navigation/native";
 
 const CreateListModal = ({ isModalOpen, setIsModalOpen, itemToAdd, type }) => {
   const [listName, setListName] = useState("My watchlist");
-  const { user } = useAuth();
+  const { user, getUserData } = useAuth();
   const navigation = useNavigation();
 
   const addListToDB = async () => {
     await updateDoc(doc(db, "users", user.uid), {
-      watchLists: arrayUnion({ title: listName, items: [], desc: "" }),
-    }).then(() => setIsModalOpen(false));
+      watchLists: arrayUnion({
+        id: uuidv4(),
+        title: listName,
+        items: [],
+        desc: "",
+      }),
+    }).then(() => {
+      getUserData().catch((error) => console.log(error));
+      setIsModalOpen(false);
+    });
   };
 
   const createPlaylistAndAdd = async () => {
+    const id = itemToAdd.id;
     const newList = {
+      id: uuidv4(),
       title: listName,
       items: [
         {
-          id: itemToAdd.id,
+          id,
           poster_path: `https://image.tmdb.org/t/p/w500${itemToAdd.poster_path}`,
           type,
           title: type === 0 ? itemToAdd.title : itemToAdd.name,
@@ -38,9 +56,19 @@ const CreateListModal = ({ isModalOpen, setIsModalOpen, itemToAdd, type }) => {
       desc: "",
     };
 
-    await updateDoc(doc(db, "users", user.uid), {
-      watchLists: arrayUnion(newList),
-    }).then(() => {
+    const userRef = doc(db, "users", user.uid);
+    const userData = (await getDoc(userRef)).data();
+    userData.watchLists.push(newList);
+    userData.userMovies[id] = false;
+    const uploadedRef = doc(db, "uploadedWatchLists", newList.id);
+    const uploadedSnapshot = await getDoc(uploadedRef);
+
+    if (uploadedSnapshot.exists()) {
+      await setDoc(uploadedRef, watchList);
+    }
+
+    await setDoc(userRef, userData).then(() => {
+      getUserData().catch((error) => console.log(error));
       setIsModalOpen(false);
       navigation.goBack();
     });

@@ -1,15 +1,18 @@
 import React, { useEffect } from "react";
 import { View, SafeAreaView, TouchableOpacity } from "react-native";
 import useAuth from "../../hooks/useAuth";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import GradientBackground from "../components/GradientBackground";
 import CustomText from "../components/CustomText";
 import { SvgUri } from "react-native-svg";
 
 const HomeScreen = () => {
-  const { user, logOut } = useAuth();
+  const { user, getUserData, logOut } = useAuth();
+  const isFocused = useIsFocused();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (isFocused) getUserData().catch((error) => console.log(error));
+  }, [isFocused]);
 
   const navigation = useNavigation();
   return (

@@ -10,8 +10,10 @@ import {
   fetchByName,
 } from "../../../helpers/api";
 import GradientBackground from "../../components/GradientBackground";
-import { renderList, renderGenres } from "../../../helpers/helpers";
 import SearchResults from "./SearchResults";
+import HorizontalList from "../../components/HorizontalList";
+import _map from "lodash/map";
+import { movieGenres } from "../../../helpers/constants";
 
 const MovieScreen = () => {
   const [trending, setTrending] = useState([]);
@@ -57,6 +59,19 @@ const MovieScreen = () => {
     });
   };
 
+  const renderGenres = () => {
+    return _map(movieGenres, (genre, key) => {
+      return (
+        <View key={key} className={"flex justify-center items-center"}>
+          <View className={"bg-white w-20 h-20 rounded-lg"}></View>
+          <CustomText font={"poppins-sbold"} classes={"text-center mt-2"}>
+            {genre.name}
+          </CustomText>
+        </View>
+      );
+    });
+  };
+
   return (
     <GradientBackground>
       <SafeAreaView>
@@ -74,8 +89,8 @@ const MovieScreen = () => {
           </View>
         </View>
         <ScrollView>
-          <View className={"px-4 pb-44 flex"}>
-            {searchTerm === "" ? (
+          {searchTerm === "" ? (
+            <View className={"px-4 pb-44 flex"}>
               <View>
                 {/*Genres*/}
                 <View className={"mt-6"}>
@@ -92,18 +107,28 @@ const MovieScreen = () => {
                 </View>
 
                 {/*Trending now*/}
-                {renderList("Trending now", trending)}
+                <HorizontalList
+                  header={"Trending now"}
+                  listToRender={trending}
+                />
 
                 {/*Discover movies*/}
-                {renderList("Discover movies", discoveredMovies)}
+                <HorizontalList
+                  header={"Discover movies"}
+                  listToRender={discoveredMovies}
+                />
 
                 {/*Discover TV*/}
-                {renderList("Discover TV", discoveredTV, 1)}
+                <HorizontalList
+                  header={"Discover TV"}
+                  listToRender={discoveredTV}
+                  type={1}
+                />
               </View>
-            ) : (
-              <SearchResults searchResults={searchResults} />
-            )}
-          </View>
+            </View>
+          ) : (
+            <SearchResults searchResults={searchResults} />
+          )}
         </ScrollView>
       </SafeAreaView>
     </GradientBackground>
